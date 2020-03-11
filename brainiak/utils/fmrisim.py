@@ -1754,10 +1754,13 @@ def _generate_noise_temporal_autoregression(timepoints,
     for tr_counter in range(len(timepoints)):
 
         # Create a brain shaped volume with appropriate smoothing properties
-        noise = _generate_noise_spatial(dimensions=dimensions,
-                                        mask=mask,
-                                        fwhm=noise_dict['fwhm'],
-                                        )
+        if noise_dict['ignore_spatial']:
+            noise = np.ones(dimensions)
+        else:
+            noise = _generate_noise_spatial(dimensions=dimensions,
+                                            mask=mask,
+                                            fwhm=noise_dict['fwhm'],
+                                            )
 
         # Store all of the noise volumes
         err_vols[:, :, :, tr_counter] = noise
@@ -2108,10 +2111,13 @@ def _generate_noise_temporal(stimfunction_tr,
                                               )
 
         # Create a brain shaped volume with similar smoothing properties
-        volume = _generate_noise_spatial(dimensions=dimensions,
-                                         mask=mask,
-                                         fwhm=noise_dict['fwhm'],
-                                         )
+        if noise_dict['ignore_spatial']:
+            volume = np.ones(dimensions)
+        else:
+            volume = _generate_noise_spatial(dimensions=dimensions,
+                                             mask=mask,
+                                             fwhm=noise_dict['fwhm'],
+                                             )
 
         # Combine the volume and noise
         noise_volume += np.multiply.outer(volume, noise) * noise_dict[
@@ -2138,10 +2144,13 @@ def _generate_noise_temporal(stimfunction_tr,
                                               )
 
         # Create a brain shaped volume with similar smoothing properties
-        volume = _generate_noise_spatial(dimensions=dimensions,
-                                         mask=mask,
-                                         fwhm=noise_dict['fwhm'],
-                                         )
+        if noise_dict['ignore_spatial']:
+            volume = np.ones(dimensions)
+        else:
+            volume = _generate_noise_spatial(dimensions=dimensions,
+                                             mask=mask,
+                                             fwhm=noise_dict['fwhm'],
+                                             )
         # Combine the volume and noise
         noise_volume += np.multiply.outer(volume, noise) * noise_dict[
             'task_sigma']
